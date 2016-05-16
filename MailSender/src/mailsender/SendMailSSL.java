@@ -11,59 +11,61 @@ import javax.activation.*;
 import javax.mail.*;
 import javax.mail.internet.*;
 
+//Author: FontMath
+//Github: https://github.com/FontMath/JavaMailSender
+
 public class SendMailSSL {
-	public static void main(String[] args) {
-            
-            System.setProperty("java.net.preferIPv6Stack", "true");
+    public static void main(String[] args) {
 
-		final String username = "<TU CORREO>";
-		final String password = "<TU CONTRASENA>";
-                
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "2607:f8b0:4003:c14::6d");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class",
-				"javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");
+        System.setProperty("java.net.preferIPv6Stack", "true");
 
-		Session session = Session.getDefaultInstance(props,
-			new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(username, password);
-				}
-			});
+        final String username = "gerardo.mathus94@gmail.com";
+        final String password = "We<3Quagga";
 
-		try {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "2607:f8b0:4003:c14::6d");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
 
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(username));
-			//message.setRecipients(Message.RecipientType.CC, InternetAddress.parse("abc@abc.com,abc@def.com,ghi@abc.com"));
-                        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("DESTINATARIO@EXAMPLE.COM,"+username));
-                        
-                        String msg = "<div style=\"color:red;\">BRIDGEYE</div>";
-                        
-			message.setSubject("Email con archivo");
-                        
-                        BodyPart messageBodyPart = new MimeBodyPart();
-                        Multipart multipart = new MimeMultipart();
-                        
-                        messageBodyPart.setText("Adjunto un archivo de prueba\n\nSaludos,\nGBV.");
-                        
-                        String filename= "prueba.txt";
-                        String path = "/"+filename;
-                        DataSource source = new FileDataSource(path);
-                        messageBodyPart.setDataHandler(new DataHandler(source));
-                        messageBodyPart.setFileName(filename);
-                        multipart.addBodyPart(messageBodyPart);
-                        message.setContent(multipart);
+        Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+            }
+        });
 
-			Transport.send(message);
+        try {
 
-			System.out.println("Done");
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(username));
+                //message.setRecipients(Message.RecipientType.CC, InternetAddress.parse("abc@abc.com,abc@def.com,ghi@abc.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("gerardo.mathus@me.com,"+username));
 
-		} catch (MessagingException e) {
-			throw new RuntimeException(e);
-		}
-	}
+                String msg = "<div style=\"color:red;\">BRIDGEYE</div>";
+
+                message.setSubject("Email con archivo");
+
+                BodyPart messageBodyPart1 = new MimeBodyPart();
+                BodyPart messageBodyPart2 = new MimeBodyPart();
+                Multipart multipart = new MimeMultipart();
+
+                messageBodyPart1.setText("Adjunto un archivo de prueba\n\nSaludos,\nGMGS.\n\n\n\n");
+
+                String path = "prueba.txt";
+                DataSource source = new FileDataSource(path);
+                messageBodyPart2.setDataHandler(new DataHandler(source));
+                messageBodyPart2.setFileName(path);
+                multipart.addBodyPart(messageBodyPart1);
+                multipart.addBodyPart(messageBodyPart2);
+                message.setContent(multipart);
+
+                Transport.send(message);
+
+                System.out.println("Done");
+
+        } catch (MessagingException e) {
+                throw new RuntimeException(e);
+        }
+    }
 }
